@@ -16,7 +16,7 @@ Se automatizaron los flujos principales usando **Postman** (API) y **Selenium + 
 - 📄 [Documentación completa de automatización](./AUTOMATION.md)
 - 📦 [Colección de Postman](<./Shopify QA Automation.postman_collection.json>)
 - 🐍 Scripts de Selenium: [`test_search_product.py`](./test_search_product.py) · [`test_add_to_cart.py`](./test_add_to_cart.py) · [`test_out_of_stock.py`](./test_out_of_stock.py) · [`test_checkout.py`](./test_checkout.py)
-- 🎥 [Video demostrativo del checkout automatizado](AQUÍ_VA_TU_LINK_DE_LOOM)
+- 🎥 [Video demostrativo del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
 
 ## Stack utilizado
 
