@@ -24,6 +24,12 @@ La colección exportada está disponible en [`Shopify QA Automation.postman_coll
 
 Se automatizaron los flujos principales del plan de pruebas manual usando Selenium WebDriver.
 
+### Video demostrativo
+
+[Ver video del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
+
+El video muestra la ejecución completa del test de checkout: apertura automática de Chrome, ingreso de contraseña de la tienda de desarrollo, agregar producto al carrito, llenado del formulario de envío (contacto, dirección, método de envío), y completado de los campos de pago (número de tarjeta, fecha de expiración, código de seguridad) dentro de iframes anidados — todo sin intervención manual.
+
 ### Tests implementados
 
 - **`test_search_product.py`** — Verifica que la búsqueda de "snowboard" devuelva resultados (13 encontrados)
