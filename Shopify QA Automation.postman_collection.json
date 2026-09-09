@@ -1,0 +1,359 @@
+{
+	"info": {
+		"_postman_id": "752597ba-08aa-42b3-8ddd-293f94f69e58",
+		"name": "Shopify QA Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50389243",
+		"_collection_link": "https://ariveraandrea1-986432.postman.co/workspace/Andrea-Rivera's-Workspace~0cf95627-6b28-4d02-8259-90e6da2971ef/collection/50389243-752597ba-08aa-42b3-8ddd-293f94f69e58?action=share&source=collection_link&creator=50389243"
+	},
+	"item": [
+		{
+			"name": "Get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has products array\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('products');",
+							"    pm.expect(jsonData.products).to.be.an('array');",
+							"});",
+							"",
+							"pm.test(\"All products have required fields\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    jsonData.products.forEach(product => {",
+							"        pm.expect(product).to.have.property('id');",
+							"        pm.expect(product).to.have.property('title');",
+							"        pm.expect(product).to.have.property('variants');",
+							"    });",
+							"});",
+							"",
+							"pm.test(\"All active products have at least one variant with a price\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    jsonData.products.forEach(product => {",
+							"        if (product.status === 'active') {",
+							"            pm.expect(product.variants.length).to.be.greaterThan(0);",
+							"            product.variants.forEach(variant => {",
+							"                pm.expect(parseFloat(variant.price)).to.be.greaterThan(0);",
+							"            });",
+							"        }",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/products.json",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"products.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get single product",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Create test order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order\": {\n    \"line_items\": [\n      {\n        \"variant_id\": 54370744009017,\n        \"quantity\": 2\n      }\n    ],\n    \"financial_status\": \"paid\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/orders.json",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"orders.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "locations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/locations.json",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"locations.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update inventory level",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Inventory available matches what we set\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.inventory_level.available).to.eql(8);",
+							"});",
+							"",
+							"pm.test(\"Inventory item ID matches\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.inventory_level.inventory_item_id).to.eql(56513803813177);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"location_id\": 115431670073,\n  \"inventory_item_id\": 56513803813177,\n  \"available\": 8\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/inventory_levels/set.json",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"inventory_levels",
+						"set.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order - invalid variant",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 422 (Unprocessable Entity)\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"pm.test(\"Response contains error about invalid variant\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property('errors');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order\": {\n    \"line_items\": [\n      {\n        \"variant_id\": 99999999999999,\n        \"quantity\": 1\n      }\n    ],\n    \"financial_status\": \"paid\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/orders.json",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"orders.json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create order - out of stock (caso negativo)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201 - API allows order despite zero inventory\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Order created with out-of-stock variant\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.order.line_items[0].variant_id).to.eql(54370744172857);",
+							"});",
+							"",
+							"pm.test(\"Order quantity matches requested (no inventory block)\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.order.line_items[0].quantity).to.eql(5);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Shopify-Access-Token",
+						"value": "{{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"order\": {\n    \"line_items\": [\n      {\n        \"variant_id\": 54370744172857,\n        \"quantity\": 5\n      }\n    ],\n    \"financial_status\": \"paid\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{shop_url}}/admin/api/{{api_version}}/orders.json?X-Shopify-Access-Token={{access_token}}\n",
+					"protocol": "https",
+					"host": [
+						"{{shop_url}}"
+					],
+					"path": [
+						"admin",
+						"api",
+						"{{api_version}}",
+						"orders.json"
+					],
+					"query": [
+						{
+							"key": "X-Shopify-Access-Token",
+							"value": "{{access_token}}\n"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete test order",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
