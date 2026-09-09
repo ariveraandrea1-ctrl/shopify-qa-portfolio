@@ -18,7 +18,7 @@ Se construyó una colección de Postman ("Shopify QA Automation") con 7 requests
 | 6 | Create order - out of stock | POST | **Hallazgo**: la API permite crear una orden aunque el inventario sea 0, incluso con `inventory_policy: "deny"` |
 | 7 | Delete test order | DELETE | Limpieza de datos de prueba |
 
-La colección exportada está disponible en [`Shopify-QA-Automation.postman_collection.json`](./Shopify-QA-Automation.postman_collection.json).
+La colección exportada está disponible en [`Shopify QA Automation.postman_collection.json`](./Shopify%20QA%20Automation.postman_collection.json).
 
 ## 2. Automatización de UI con Selenium + Python
 
