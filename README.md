@@ -1,43 +1,31 @@
 # Shopify QA Portfolio
 
-Proyecto de portafolio de QA manual, ejecutado sobre una tienda de desarrollo de Shopify, con el objetivo de demostrar el ciclo completo de aseguramiento de calidad: diseño de casos de prueba, ejecución, documentación de hallazgos y reporte de resultados.
+Proyecto de portafolio de QA construido sobre una tienda de desarrollo gratuita de Shopify (`qa-andrea-rivera.myshopify.com`), cubriendo pruebas manuales y automatizadas sobre los módulos de catálogo, carrito de compras y checkout.
 
-## 🎯 Objetivo
+## Fase 1: Pruebas manuales
 
-Evaluar la funcionalidad básica y la experiencia de usuario de una tienda Shopify, enfocándose en los flujos más críticos de un sitio de e-commerce: catálogo de productos, carrito de compras y proceso de checkout.
+Se diseñó y ejecutó un plan de pruebas de 18 casos across 3 módulos (catálogo, carrito, checkout), con resultado de 18/18 casos exitosos y 3 hallazgos documentados (1 bug funcional, 2 observaciones de UX).
 
-## 🛠️ Herramientas y ambiente
+- 📄 [Plan de Pruebas](./Plan_de_Pruebas_Shopify_Andrea_Rivera.docx)
+- 📄 [Reporte de Resultados](./Reporte_Resultados_Pruebas_Shopify_Andrea_Rivera.docx)
 
-- **Plataforma probada:** Shopify Development Store (tienda de desarrollo, datos de prueba generados por Shopify)
-- **Tipo de pruebas:** Manuales, de caja negra
-- **Pasarela de pago:** Bogus Gateway (pasarela de pruebas de Shopify)
-- **Dispositivos:** Desktop (Chrome)
+## Fase 2: Automatización de pruebas
 
-## 📋 Alcance
+Se automatizaron los flujos principales usando **Postman** (API) y **Selenium + Python** (UI), incluyendo casos positivos, negativos, y 2 hallazgos técnicos documentados (inconsistencia API vs. UI en manejo de inventario, y limitaciones de automatización en campos de pago con iframes).
 
-- Catálogo y búsqueda de productos
-- Carrito de compras
-- Proceso de checkout
+- 📄 [Documentación completa de automatización](./AUTOMATION.md)
+- 📦 [Colección de Postman](<./Shopify QA Automation.postman_collection.json>)
+- 🐍 Scripts de Selenium: [`test_search_product.py`](./test_search_product.py) · [`test_add_to_cart.py`](./test_add_to_cart.py) · [`test_out_of_stock.py`](./test_out_of_stock.py) · [`test_checkout.py`](./test_checkout.py)
+- 🎥 [Video demostrativo del checkout automatizado](AQUÍ_VA_TU_LINK_DE_LOOM)
 
-*Fuera de alcance: registro/login de cliente, gestión de cuenta, pasarelas de pago reales.*
+## Stack utilizado
 
-## 📊 Resultados
+- **Pruebas manuales**: diseño de casos de prueba, ejecución, reporte de bugs
+- **Automatización de API**: Postman, JavaScript (pm.test assertions)
+- **Automatización de UI**: Python 3.14, Selenium 4.48.0
+- **Entorno**: PyCharm, venv
 
-| Módulo | Casos ejecutados | Pasan | % de éxito |
-|---|---|---|---|
-| Catálogo y búsqueda | 5 | 5 | 100% |
-| Carrito de compras | 6 | 6 | 100% |
-| Proceso de checkout | 7 | 7 | 100% |
-| **Total** | **18** | **18** | **100%** |
+## Autora
 
-Durante la ejecución se documentaron 3 hallazgos adicionales (1 de configuración, 2 de experiencia de usuario) — ver detalle completo en el reporte.
-
-## 📁 Documentos
-
-- [`Plan_de_Pruebas_Shopify_Andrea_Rivera.docx`](./Plan_de_Pruebas_Shopify_Andrea_Rivera.docx) — Objetivo, alcance, estrategia y los 18 casos de prueba diseñados.
-- [`Reporte_Resultados_Pruebas_Shopify_Andrea_Rivera.docx`](./Reporte_Resultados_Pruebas_Shopify_Andrea_Rivera.docx) — Resultados de ejecución, evidencia y hallazgos documentados.
-
-## 👩‍💻 Autora
-
-**Andrea Rivera Amador** — QA Engineer Jr.
+Andrea Rivera Amador — QA Engineer Jr.
 [LinkedIn](https://linkedin.com/in/andrea-rivera-qa) · [GitHub](https://github.com/ariveraandrea1-ctrl)
