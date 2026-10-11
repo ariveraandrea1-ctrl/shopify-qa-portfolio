@@ -1,31 +1,32 @@
 # Shopify QA Portfolio
 
-Proyecto de portafolio de QA construido sobre una tienda de desarrollo gratuita de Shopify (`qa-andrea-rivera.myshopify.com`), cubriendo pruebas manuales y automatizadas sobre los módulos de catálogo, carrito de compras y checkout.
+Este es un proyecto personal de QA que armé sobre una tienda de desarrollo gratuita de Shopify (`qa-andrea-rivera.myshopify.com`). La idea fue recorrer un ciclo de pruebas completo sobre una tienda real: primero diseñar y ejecutar las pruebas a mano, y después automatizar los flujos más importantes por API y por interfaz.
 
-## Fase 1: Pruebas manuales
+Me enfoqué en tres partes de la tienda: el catálogo y la búsqueda de productos, el carrito de compras y el checkout.
 
-Se diseñó y ejecutó un plan de pruebas de 18 casos across 3 módulos (catálogo, carrito, checkout), con resultado de 18/18 casos exitosos y 3 hallazgos documentados (1 bug funcional, 2 observaciones de UX).
+## Pruebas manuales
 
-- 📄 [Plan de Pruebas](./Plan_de_Pruebas_Shopify_Andrea_Rivera.docx)
-- 📄 [Reporte de Resultados](./Reporte_Resultados_Pruebas_Shopify_Andrea_Rivera.docx)
+Escribí un plan de pruebas con 18 casos repartidos entre los tres módulos y los ejecuté sobre la tienda. Los 18 pasaron. En el camino encontré un bug funcional (Colombia no aparece como país de envío en la configuración de Markets) y dos detalles de experiencia de usuario: la búsqueda vacía no da ningún mensaje, y desde el checkout no hay un enlace para volver al carrito.
 
-## Fase 2: Automatización de pruebas
+- [Plan de pruebas (PDF)](./Plan_de_Pruebas_Shopify_Andrea_Rivera.pdf)
+- [Casos de prueba (Excel)](./Casos_de_Prueba_Shopify_Andrea_Rivera.xlsx)
+- [Reporte de resultados (PDF)](./Reporte_Resultados_Pruebas_Shopify_Andrea_Rivera.pdf)
 
-Se automatizaron los flujos principales usando **Postman** (API) y **Selenium + Python** (UI), incluyendo casos positivos, negativos, y 2 hallazgos técnicos documentados (inconsistencia API vs. UI en manejo de inventario, y limitaciones de automatización en campos de pago con iframes).
+## Automatización
 
-- 📄 [Documentación completa de automatización](./AUTOMATION.md)
-- 📦 [Colección de Postman](<./Shopify QA Automation.postman_collection.json>)
-- 🐍 Scripts de Selenium: [`test_search_product.py`](./test_search_product.py) · [`test_add_to_cart.py`](./test_add_to_cart.py) · [`test_out_of_stock.py`](./test_out_of_stock.py) · [`test_checkout.py`](./test_checkout.py)
-- 🎥 [Video demostrativo del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
+Con las pruebas manuales listas, pasé a automatizar. Por el lado de la API usé Postman contra la Admin API de Shopify, y por el lado de la interfaz usé Selenium con Python.
 
-## Stack utilizado
+Lo más interesante que salió de esta fase fue una inconsistencia en el manejo de inventario: la tienda bloquea la compra de un producto agotado, pero la API sí deja crear el pedido. También me topé con que algunos campos de pago del checkout no se dejan automatizar con Selenium; lo explico en el documento de automatización.
 
-- **Pruebas manuales**: diseño de casos de prueba, ejecución, reporte de bugs
-- **Automatización de API**: Postman, JavaScript (pm.test assertions)
-- **Automatización de UI**: Python 3.14, Selenium 4.48.0
-- **Entorno**: PyCharm, venv
+- [Detalle de la automatización](./AUTOMATION.md)
+- [Colección de Postman](<./Shopify QA Automation.postman_collection.json>)
+- Scripts de Selenium: [`test_search_product.py`](./test_search_product.py), [`test_add_to_cart.py`](./test_add_to_cart.py), [`test_out_of_stock.py`](./test_out_of_stock.py), [`test_checkout.py`](./test_checkout.py)
+- [Video del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
 
-## Autora
+## Herramientas
 
-Andrea Rivera Amador — QA Engineer Jr.
-[LinkedIn](https://linkedin.com/in/andrea-rivera-qa) · [GitHub](https://github.com/ariveraandrea1-ctrl)
+Postman para las pruebas de API (con las aserciones escritas en JavaScript), Python 3.14 con Selenium 4.48.0 para la interfaz, y PyCharm con un entorno virtual para trabajar los scripts.
+
+## Sobre mí
+
+Soy Andrea Rivera Amador, QA Engineer Jr. en Medellín. Si quieres hablar del proyecto, me encuentras en [LinkedIn](https://linkedin.com/in/andrea-rivera-qa).

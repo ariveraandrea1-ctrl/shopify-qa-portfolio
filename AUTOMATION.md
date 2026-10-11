@@ -1,54 +1,40 @@
-# Fase 2: Automatización de Pruebas
+# Automatización de pruebas
 
-Este documento describe la fase de automatización del proyecto de QA en Shopify, construida sobre la base del plan de pruebas manual (ver `Plan_de_Pruebas_Shopify_Andrea_Rivera.md`).
+Esta es la segunda fase del proyecto. Partí del plan de pruebas manual y automaticé los flujos que más valía la pena repetir: primero por API con Postman y luego por interfaz con Selenium y Python.
 
-## 1. Automatización de API con Postman
+## Pruebas de API con Postman
 
-Se construyó una colección de Postman ("Shopify QA Automation") con 7 requests y ~17 assertions, cubriendo la Admin API de Shopify.
+Creé una app personalizada en la tienda para tener acceso a la Admin API y armé una colección en Postman con 7 requests y unas 17 aserciones.
 
-### Endpoints cubiertos
-
-| # | Request | Método | Qué valida |
+| # | Request | Método | Qué revisa |
 |---|---------|--------|------------|
-| 1 | Get all products | GET | Estructura de datos, campos requeridos |
-| 2 | Get single product | GET | Detalle de producto, formato de precio |
-| 3 | Create test order | POST | Cálculo de subtotal (699.95 × 2 = 1,399.90) |
-| 4 | Update inventory level | POST | Actualización de stock |
-| 5 | Create order - invalid variant | POST | Caso negativo: error 422 con variant_id inexistente |
-| 6 | Create order - out of stock | POST | **Hallazgo**: la API permite crear una orden aunque el inventario sea 0, incluso con `inventory_policy: "deny"` |
-| 7 | Delete test order | DELETE | Limpieza de datos de prueba |
+| 1 | Get all products | GET | Que la respuesta traiga la estructura y los campos esperados |
+| 2 | Get single product | GET | El detalle del producto y el formato del precio |
+| 3 | Create test order | POST | Que el subtotal se calcule bien (699.95 × 2 = 1,399.90) |
+| 4 | Update inventory level | POST | Que el stock se actualice |
+| 5 | Create order - invalid variant | POST | Caso negativo: con un variant_id que no existe, la API responde 422 |
+| 6 | Create order - out of stock | POST | Hallazgo: la API crea el pedido aunque el inventario esté en 0, incluso con `inventory_policy: "deny"` |
+| 7 | Delete test order | DELETE | Borra el pedido de prueba para no dejar datos sueltos |
 
-La colección exportada está disponible en [`Shopify QA Automation.postman_collection.json`](./Shopify%20QA%20Automation.postman_collection.json).
+La colección está en [`Shopify QA Automation.postman_collection.json`](./Shopify%20QA%20Automation.postman_collection.json) por si quieres importarla.
 
-## 2. Automatización de UI con Selenium + Python
+## Pruebas de interfaz con Selenium
 
-Se automatizaron los flujos principales del plan de pruebas manual usando Selenium WebDriver.
+La tienda de desarrollo tiene contraseña, así que cada test empieza con una función que entra a la tienda antes de hacer lo demás.
 
-### Video demostrativo
+- `test_search_product.py` busca "snowboard" y comprueba que aparezcan resultados (salen 13).
+- `test_add_to_cart.py` agrega un producto, sube la cantidad a 2 y revisa que el subtotal sea 1,399.90.
+- `test_out_of_stock.py` entra a un producto sin inventario y confirma que el botón de compra esté deshabilitado y diga "Sold out".
+- `test_checkout.py` recorre el checkout: datos de contacto, dirección, método de envío y llegada a la pantalla de pago.
 
-[Ver video del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
+En [este video](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544) se ve el checkout corriendo solo, desde que se abre Chrome hasta la pantalla de pago.
 
-El video muestra la ejecución completa del test de checkout: apertura automática de Chrome, ingreso de contraseña de la tienda de desarrollo, agregar producto al carrito, llenado del formulario de envío (contacto, dirección, método de envío), y completado de los campos de pago (número de tarjeta, fecha de expiración, código de seguridad) dentro de iframes anidados — todo sin intervención manual.
+## Lo que encontré
 
-### Tests implementados
+**La API y la tienda no se ponen de acuerdo con el inventario.** Desde la tienda no se puede comprar un producto agotado, porque el botón aparece deshabilitado. Pero desde la Admin API sí se puede crear un pedido con ese mismo producto (request 6 de Postman). Todo indica que la validación de stock solo se aplica en la tienda y no en la API administrativa.
 
-- **`test_search_product.py`** — Verifica que la búsqueda de "snowboard" devuelva resultados (13 encontrados)
-- **`test_add_to_cart.py`** — Agrega un producto al carrito, incrementa la cantidad, y verifica que el subtotal calculado coincida (699.95 × 2 = 1,399.90)
-- **`test_out_of_stock.py`** — Confirma que el botón "Agregar al carrito" esté deshabilitado para un producto sin stock
-- **`test_checkout.py`** — Automatiza el flujo completo de checkout: datos de contacto, dirección de envío, selección de método de envío, y llegada a la pantalla de pago
+**Algunos campos de pago no se dejan automatizar.** Los datos de la tarjeta van cada uno dentro de su propio iframe. El número de tarjeta se llena sin problema, pero la fecha de vencimiento y el código de seguridad fallan siempre con `element not interactable`. Probé con ActionChains, escribiendo carácter por carácter, disparando los eventos del DOM a mano y desactivando el autocompletado de Chrome, y ninguna funcionó. Lo más probable es que sea una protección intencional de Shopify sobre esos campos, así que lo dejo registrado como una limitación conocida y no como una prueba fallida.
 
-### Hallazgos técnicos
+## Herramientas
 
-**1. Inconsistencia API vs. UI en manejo de inventario**
-La API Admin permite crear una orden con un producto sin stock (ver request #6 de Postman), mientras que la interfaz de usuario correctamente deshabilita el botón de compra en ese mismo escenario (ver `test_out_of_stock.py`). Esto sugiere que la validación de inventario se aplica solo a nivel de frontend/storefront, no en la API administrativa.
-
-**2. Resistencia a la automatización en campos de pago (iframes)**
-Los campos de tarjeta de crédito en el checkout (`Expiration date`, `Security code`) están anidados en iframes individuales con protecciones que impiden la interacción automatizada estándar de Selenium, incluso tras probar múltiples estrategias: `ActionChains`, escritura carácter por carácter, disparo manual de eventos DOM (`input`, `change`, `blur`), y deshabilitación del autocompletado de Chrome. El campo `Card number` sí se completa exitosamente; los otros dos fallan consistentemente con `element not interactable`.
-
-Esto es consistente con medidas de seguridad PCI-compliance que Shopify aplica intencionalmente a estos campos sensibles, y se documenta aquí como una limitación técnica conocida — no como una prueba fallida.
-
-## Stack utilizado
-
-- **API testing**: Postman, JavaScript (pm.test assertions)
-- **UI testing**: Python 3.14, Selenium 4.48.0
-- **Entorno**: PyCharm, venv
+Postman con aserciones en JavaScript para la API, Python 3.14 y Selenium 4.48.0 para la interfaz, y PyCharm con un entorno virtual.
