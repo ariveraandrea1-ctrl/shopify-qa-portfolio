@@ -20,12 +20,12 @@ La colección está en [`Shopify QA Automation.postman_collection.json`](./Shopi
 
 ## Pruebas de interfaz con Selenium
 
-La tienda de desarrollo tiene contraseña, así que cada test empieza con una función que entra a la tienda antes de hacer lo demás.
+Las pruebas están en la carpeta [`tests`](./tests) y se corren con pytest. La tienda de desarrollo tiene contraseña, así que en `conftest.py` hay un *fixture* que abre Chrome, entra a la tienda y lo cierra al final de cada prueba. La contraseña se lee de la variable de entorno `STORE_PASSWORD` para no dejarla en el código. Para esperar a que cargue cada elemento uso esperas explícitas (`WebDriverWait`) en lugar de pausas fijas.
 
-- `test_search_product.py` busca "snowboard" y comprueba que aparezcan resultados (salen 13).
+- `test_search_product.py` busca "snowboard" y comprueba que aparezcan resultados.
 - `test_add_to_cart.py` agrega un producto, sube la cantidad a 2 y revisa que el subtotal sea 1,399.90.
 - `test_out_of_stock.py` entra a un producto sin inventario y confirma que el botón de compra esté deshabilitado y diga "Sold out".
-- `test_checkout.py` recorre el checkout: datos de contacto, dirección, método de envío y llegada a la pantalla de pago.
+- `test_checkout.py` recorre el checkout (contacto, dirección y método de envío), llega a la pantalla de pago y llena el número de tarjeta. Tiene una segunda prueba para la fecha de vencimiento y el CVV, marcada como fallo esperado (`xfail`) por la limitación que explico más abajo.
 
 En [este video](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544) se ve el checkout corriendo solo, desde que se abre Chrome hasta la pantalla de pago.
 

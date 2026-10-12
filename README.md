@@ -20,12 +20,22 @@ Lo más interesante que salió de esta fase fue una inconsistencia en el manejo 
 
 - [Detalle de la automatización](./AUTOMATION.md)
 - [Colección de Postman](<./Shopify QA Automation.postman_collection.json>)
-- Scripts de Selenium: [`test_search_product.py`](./test_search_product.py), [`test_add_to_cart.py`](./test_add_to_cart.py), [`test_out_of_stock.py`](./test_out_of_stock.py), [`test_checkout.py`](./test_checkout.py)
+- [Pruebas de Selenium](./tests)
 - [Video del checkout automatizado](https://www.loom.com/share/368cd916f4c6496ca2cf003000df0544)
+
+## Cómo correr las pruebas de Selenium
+
+```bash
+pip install -r requirements.txt
+export STORE_PASSWORD="contraseña de la tienda"
+pytest tests -v
+```
+
+La tienda de desarrollo tiene contraseña, y las pruebas la leen de la variable `STORE_PASSWORD` en vez de tenerla escrita en el código. Si la variable no está, las pruebas se saltan con un aviso. En Windows, en vez de `export` se usa `set STORE_PASSWORD=...`.
 
 ## Herramientas
 
-Postman para las pruebas de API (con las aserciones escritas en JavaScript), Python 3.14 con Selenium 4.48.0 para la interfaz, y PyCharm con un entorno virtual para trabajar los scripts.
+Postman para las pruebas de API (con las aserciones escritas en JavaScript), Python 3.14 con Selenium 4.48.0 y pytest para la interfaz, y PyCharm con un entorno virtual para trabajar los scripts.
 
 ## Sobre mí
 
